@@ -9,6 +9,7 @@ from optparse import OptionParser
 __version__ = "1.0"
 ############################################################
 
+
 def kpath_name_parse(KPATH_STR):
     '''
     Parse the kpath string
@@ -19,30 +20,32 @@ def kpath_name_parse(KPATH_STR):
     KPATH_SEPARATORS = ' ,-;'
     # Greek Letters Dictionaries
     GREEK_KPTS = {
-        'G':      r'$\mathrm{\mathsf{\Gamma}}$',
-        'GAMMA':  r'$\mathrm{\mathsf{\Gamma}}$',
-        'DELTA':  r'$\mathrm{\mathsf{\Delta}}$',
-        'LAMBDA': r'$\mathrm{\mathsf{\Lambda}}$',
-        'SIGMA':  r'$\mathrm{\mathsf{\Sigma}}$',
+        'G':      r'$\mathrm{\Gamma}$',
+        'GAMMA':  r'$\mathrm{\Gamma}$',
+        'DELTA':  r'$\mathrm{\Delta}$',
+        'LAMBDA': r'$\mathrm{\Lambda}$',
+        'SIGMA':  r'$\mathrm{\Sigma}$',
     }
 
     # If any of the kpath separators is in the kpath string
     if any([s in KPATH_STR for s in KPATH_SEPARATORS]):
         kname = [
-            GREEK_KPTS[x] if x in GREEK_KPTS else 
-	    r'$\mathrm{{\mathsf{{{}}}}}$'.format(x)
+            GREEK_KPTS[x] if x in GREEK_KPTS else
+            x
+            # r'$\mathrm{{{{}}}}}$'.format(x)
             for x in re.sub('['+KPATH_SEPARATORS+']', ' ', KPATH_STR).split()
         ]
     else:
         kname = [
-            GREEK_KPTS[x] if x in GREEK_KPTS else 
-	    r'$\mathrm{{\mathsf{{{}}}}}$'.format(x)
+            GREEK_KPTS[x] if x in GREEK_KPTS else
+            x
+            # r'$\mathrm{{\mathsf{{{}}}}}$'.format(x)
             for x in KPATH_STR
         ]
 
     return kname
-        
-        
+
+
 def parseList(string):
     def parseRange(rng):
         # print(rng)
@@ -68,6 +71,7 @@ For example: '1 4:6 8:16:2' will be converted to '1 4 5 6 8 10 12 14 16'
         ret += parseRange(rng)
     return list(set(ret))
 
+
 def parseSpdProjection(spd):
     '''
     Parse spdProjections string.  str -> [int]
@@ -75,25 +79,25 @@ def parseSpdProjection(spd):
     # Ionizing
     '''
     spd_dict = {
-            's'   : [0],
-            'p'   : [1, 2, 3],
-            'd'   : [4, 5, 6, 7, 8],
-            'f'   : [9, 10, 11, 12, 13, 14, 15],
-            'py'  : [1],
-            'pz'  : [2],
-            'px'  : [3],
-            'dxy' : [4],
-            'dyz' : [5],
-            'dz2' : [6],
-            'dxz' : [7],
-            'dx2' : [8],
-    "fy(3x2-y2)"  : [9],
-    "fxyz  "      : [10],
-    "fyz2  "      : [11],
-    "fz3   "      : [12],
-    "fxz2  "      : [13],
-    "fz(x2-y2)"   : [14],
-    "fx(x2-3y2) " : [15],
+        's': [0],
+        'p': [1, 2, 3],
+        'd': [4, 5, 6, 7, 8],
+        'f': [9, 10, 11, 12, 13, 14, 15],
+        'py': [1],
+        'pz': [2],
+        'px': [3],
+        'dxy': [4],
+        'dyz': [5],
+        'dz2': [6],
+        'dxz': [7],
+        'dx2': [8],
+        "fy(3x2-y2)": [9],
+        "fxyz  ": [10],
+        "fyz2  ": [11],
+        "fz3   ": [12],
+        "fxz2  ": [13],
+        "fz(x2-y2)": [14],
+        "fx(x2-3y2) ": [15],
     }
 
     ret = []
@@ -104,12 +108,12 @@ def parseSpdProjection(spd):
         except:
             if l.lower() not in spd_dict:
                 raise ValueError(
-                   "Spd-projected wavefunction character of each KS orbital.\n"
-                   "    s orbital: 0\n"
-                   "    py, pz, px orbital: 1 2 3\n"
-                   "    dxy, dyz, dz2, dxz, dx2 orbital: 4 5 6 7 8 \n"
-                   "    fy(3x2-y2), fxyz, fyz2, fz3, fxz2, fz(x2-y2), fx(x2-3y2) orbital: 9 10 11 12 13 14 15\n"
-                   "\nFor example, --spd 's dxy 10' specifies the s/dxy/fxyz components\n"
+                    "Spd-projected wavefunction character of each KS orbital.\n"
+                    "    s orbital: 0\n"
+                    "    py, pz, px orbital: 1 2 3\n"
+                    "    dxy, dyz, dz2, dxz, dx2 orbital: 4 5 6 7 8 \n"
+                    "    fy(3x2-y2), fxyz, fyz2, fz3, fxz2, fz(x2-y2), fx(x2-3y2) orbital: 9 10 11 12 13 14 15\n"
+                    "\nFor example, --spd 's dxy 10' specifies the s/dxy/fxyz components\n"
                 )
             ret += spd_dict[l]
 
@@ -282,8 +286,8 @@ def bandplot(kpath, bands, efermi, kpt_bounds, opts, whts=None):
         DELTA = 0.3
         EnergyWeight = whts[0]
         norm = mpl.colors.Normalize(
-                vmin = opts.occLC_cbar_vmin if opts.occLC_cbar_vmin else EnergyWeight.min(),
-                vmax = opts.occLC_cbar_vmax if opts.occLC_cbar_vmax else EnergyWeight.max(),
+            vmin=opts.occLC_cbar_vmin if opts.occLC_cbar_vmin else EnergyWeight.min(),
+            vmax=opts.occLC_cbar_vmax if opts.occLC_cbar_vmax else EnergyWeight.max(),
         )
         # norm = mpl.colors.Normalize(0, 1)
         # create a ScalarMappable and initialize a data structure
@@ -336,7 +340,6 @@ def bandplot(kpath, bands, efermi, kpt_bounds, opts, whts=None):
         else:
             cbar.ax.yaxis.set_ticks_position('right')
 
-
     else:
         for Ispin in range(nspin):
             for Iband in range(nbands):
@@ -364,7 +367,7 @@ def bandplot(kpath, bands, efermi, kpt_bounds, opts, whts=None):
     for yy in opts.vlines:
         ax.axvline(x=yy, ls=':', color='k', lw=0.5, alpha=0.5)
 
-    ax.set_ylabel('Energy [eV]',  # fontsize='small',
+    ax.set_ylabel('Energy (eV)',  # fontsize=15,
                   labelpad=5)
     ax.set_ylim(ymin, ymax)
     ax.set_xlim(kpath.min(), kpath.max())
@@ -476,7 +479,9 @@ def saveband_dat(kpath, bands, opts, whts=None):
                            header=header)
                 if whts:
                     for i in range(len(whts)):
-                        filename = prefix + '_' + spinSuffix[Ispin] + '_weights_component_{}'.format(i + 1) + '.dat'
+                        filename = prefix + '_' + \
+                            spinSuffix[Ispin] + \
+                            '_weights_component_{}'.format(i + 1) + '.dat'
                         np.savetxt(filename, np.c_[kpath, whts[i][Ispin]], fmt='%10.4f',
                                    header=header)
 
@@ -529,7 +534,7 @@ def command_line_arg():
 
     par.add_option('-s', '--size', nargs=2,
                    action='store', type="float", dest='figsize',
-                   default=(3.0, 4.0),
+                   default=(8.89, 6.67),
                    help='figure size of the output plot')
 
     par.add_option('-y', nargs=2,
@@ -554,7 +559,7 @@ def command_line_arg():
 
     par.add_option('--lw',
                    action='store', type="float", dest='linewidth',
-                   default=1.0,
+                   default=3.0,
                    help='linewidth of the band plot')
 
     par.add_option('--lc',
@@ -663,8 +668,8 @@ if __name__ == '__main__':
 
     if opts.occ:
 
-        Nocc  = len(opts.occ)
-        occM  = ['o' for ii in range(Nocc)]
+        Nocc = len(opts.occ)
+        occM = ['o' for ii in range(Nocc)]
         occMc = ['r' for ii in range(Nocc)]
         occMs = [20 for ii in range(Nocc)]
         for ii in range(min(len(opts.occMarker), Nocc)):
@@ -673,9 +678,9 @@ if __name__ == '__main__':
             occMs[ii] = opts.occMarkerSize[ii]
         for ii in range(min(len(opts.occMarkerColor), Nocc)):
             occMc[ii] = opts.occMarkerColor[ii]
-        opts.occMarker      = occM
+        opts.occMarker = occM
         opts.occMarkerColor = occMc
-        opts.occMarkerSize  = occMs
+        opts.occMarkerSize = occMs
 
         whts = []
         iterater = 0
@@ -714,13 +719,14 @@ if __name__ == '__main__':
     if opts.isHSE:
         kmask = np.logical_not(wkpts > 0)
         kpath = kpath[kmask]
-        bands = bands[:,kmask,:]
+        bands = bands[:, kmask, :]
         if whts:
-            whts  = [w[:,kmask,...] for w in whts]
+            whts = [w[:, kmask, ...] for w in whts]
 
         # if opts.nseg is None:
         if len(opts.nseg) == 0:
-            raise ValueError("Please enter #kpoints in each kpath segment with '--nseg'.")
+            raise ValueError(
+                "Please enter #kpoints in each kpath segment with '--nseg'.")
 
         if len(opts.nseg) == 1:
             nn = opts.nseg[0]
@@ -734,13 +740,14 @@ if __name__ == '__main__':
         skpts = parseList(opts.skip_kpts)
         kmask = [ii for ii in range(bands.shape[1]) if ii not in skpts]
         kpath = kpath[kmask]
-        bands = bands[:,kmask,:]
+        bands = bands[:, kmask, :]
         if whts:
-            whts  = [w[:,kmask,...] for w in whts]
+            whts = [w[:, kmask, ...] for w in whts]
 
         # if opts.nseg is None:
         if len(opts.nseg) == 0:
-            raise ValueError("Please enter #kpoints in each kpath segment with '--nseg'.")
+            raise ValueError(
+                "Please enter #kpoints in each kpath segment with '--nseg'.")
 
         if len(opts.nseg) == 1:
             nn = opts.nseg[0]
