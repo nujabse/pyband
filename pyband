@@ -303,7 +303,6 @@ def bandplot(kpath, bands, efermi, kpt_bounds, opts, whts=None):
                 ax.plot(x, y,
                         lw=LW + 2 * DELTA,
                         color='gray', zorder=1)
-
                 points = np.array([x, y]).T.reshape(-1, 1, 2)
                 segments = np.concatenate([points[:-1], points[1:]], axis=1)
                 lc = LineCollection(segments,
@@ -341,6 +340,7 @@ def bandplot(kpath, bands, efermi, kpt_bounds, opts, whts=None):
             cbar.ax.yaxis.set_ticks_position('right')
 
     else:
+        line_labels = []
         for Ispin in range(nspin):
             for Iband in range(nbands):
                 # if Iband == 0 else line.get_color()
@@ -357,6 +357,9 @@ def bandplot(kpath, bands, efermi, kpt_bounds, opts, whts=None):
                                    opts.occMarkerSize[ii],
                                    marker=opts.occMarker[ii], zorder=1, lw=0.0,
                                    alpha=0.5)
+            line_labels.append(line)
+        ax.legend(line_labels, opts.legends, loc=opts.legend_loc,
+                  fontsize=opts.legend_fontsize, frameon=True)
 
     for bd in kpt_bounds:
         ax.axvline(x=bd, ls='-', color='k', lw=0.5, alpha=0.5)
@@ -659,6 +662,17 @@ def command_line_arg():
                    action='store_true', dest='quiet',
                    help='not show the resulting image')
 
+    par.add_option('-l', '--legends',
+                   action='append', dest='legends', default=["Spin Up", "Spin Down"],
+                   help='Set the legends names')
+
+    par.add_option('--lp',
+                   action='store', dest='legend_loc', default="best",  type='string',
+                   help='Set the legends names')
+
+    par.add_option('--ls',
+                   action='store', dest='legend_fontsize', default=15, type='int',
+                   help='Set the legends names')
     return par.parse_args()
 
 
