@@ -362,8 +362,10 @@ def bandplot(kpath, bands, efermi, kpt_bounds, opts, whts=None):
                                    marker=opts.occMarker[ii], zorder=1, lw=0.0,
                                    alpha=0.5)
             line_labels.append(line)
-        ax.legend(line_labels, opts.legends, loc=opts.legend_loc,
-                  fontsize=opts.legend_fontsize, frameon=True)
+        # Check if we are plotting spin-polarized band structure
+        if nspin > 1:
+            ax.legend(line_labels, opts.legends, loc=opts.legend_loc,
+                      fontsize=opts.legend_fontsize, frameon=True)
 
     for bd in kpt_bounds:
         ax.axvline(x=bd, ls='-', color='k', lw=0.5, alpha=0.5)
