@@ -345,10 +345,14 @@ def bandplot(kpath, bands, efermi, kpt_bounds, opts, whts=None):
             for Iband in range(nbands):
                 # if Iband == 0 else line.get_color()
                 lc = opts.linecolors[Ispin]
-                line, = ax.plot(kpath, bands[Ispin, :, Iband], lw=opts.linewidth, zorder=0,
-                                alpha=0.8,
-                                color=lc,
-                                )
+                if opts.scatter:
+                    line, = ax.plot(kpath, bands[Ispin, :, Iband], 'o', markersize=opts.markersize,
+                                    color=lc, zorder=0, lw=0.0, alpha=0.8)
+                else:
+                    line, = ax.plot(kpath, bands[Ispin, :, Iband], lw=opts.linewidth, zorder=0,
+                                    alpha=0.8,
+                                    color=lc,
+                                    )
                 if whts is not None:
                     for ii in range(len(opts.occ)):
                         ax.scatter(kpath, bands[Ispin, :, Iband],
@@ -668,11 +672,19 @@ def command_line_arg():
 
     par.add_option('--lp',
                    action='store', dest='legend_loc', default="best",  type='string',
-                   help='Set the legends names')
+                   help='Set the legends position')
 
     par.add_option('--ls',
                    action='store', dest='legend_fontsize', default=15, type='int',
-                   help='Set the legends names')
+                   help='Set the legend fontsize')
+
+    par.add_option('--scatter',
+                   action='store_true', dest='scatter', default=False,
+                   help='Whether to use scatter plot in band structure')
+
+    par.add_option('--markersize',
+                   action='store', dest='markersize', default=2, type='float',
+                   help='Set the marker size in band scatter plot')
     return par.parse_args()
 
 
