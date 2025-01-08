@@ -379,7 +379,7 @@ def bandplot(kpath, bands, efermi, kpt_bounds, opts, whts=None):
     ax.set_ylabel('Energy (eV)',  # fontsize=15,
                   labelpad=5)
     ax.set_ylim(ymin, ymax)
-    ax.set_xlim(kpath.min(), kpath.max())
+
 
     ax.set_xticks(kpt_bounds)
     if opts.kpts:
@@ -388,7 +388,11 @@ def bandplot(kpath, bands, efermi, kpt_bounds, opts, whts=None):
         ax.set_xticklabels([])
 
     ax.yaxis.set_minor_locator(AutoMinorLocator(2))
-
+    if opts.xlim:
+        print('Setting X!')
+        ax.set_xlim(opts.xlim[0], opts.xlim[1])
+    else:
+        ax.set_xlim(kpath.min(), kpath.max())
     plt.tight_layout(pad=0.20)
     plt.savefig(opts.bandimage, dpi=opts.dpi)
 
@@ -550,6 +554,10 @@ def command_line_arg():
                    action='store', type="float", dest='ylim',
                    default=(-3, 3),
                    help='energy range of the band plot')
+
+    par.add_option('-x', nargs=2,
+                   action='store', type="float", dest='xlim',
+                   help='K path range of the band plot')
 
     par.add_option('--hline',
                    action='append', type="float", dest='hlines',
@@ -806,6 +814,7 @@ if __name__ == '__main__':
     else:
         opts.linecolors = mpl_default_colors_cycle
 
+    print(kpt_bounds)
     bandplot(kpath, bands, efermi, kpt_bounds, opts, whts)
     saveband_dat(kpath, bands, opts, whts)
 
